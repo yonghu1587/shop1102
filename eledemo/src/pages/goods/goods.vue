@@ -19,8 +19,8 @@ export default {
     data(){
         return {
             info:{
-                title:'',
                 isAdd:true,
+                isList:true,
             }
         }
     },

@@ -3,8 +3,8 @@ import qs from 'qs'
 import {errorAlert} from './alert'
 import store from '../store/index'
 // 配置基础路径
-// const baseUrl = '/api';
-const baseUrl = ''
+const baseUrl = '/api';
+// const baseUrl = ''
 
 // 定义全局请求拦截
 axios.interceptors.request.use(config=>{
@@ -22,9 +22,9 @@ axios.interceptors.response.use(res=>{
         errorAlert(res.data.msg);
         return;
     }
-    // console.group(res.config.url)
-    // console.log(res);
-    // console.groupEnd();
+    console.group(res.config.url)
+    console.log(res);
+    console.groupEnd();
     return res;
 })
 // 添加菜单
@@ -298,3 +298,51 @@ export const addGoods = (data)=>{
         data:form,
     })
 }
+
+// 商品总数
+export const getGoodsCount = ()=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/goodscount',
+    })
+}
+
+// 商品总数
+export const getGoodsList = (params)=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/goodslist',
+        params,
+    })
+}
+
+//获取商品详情
+export const getGoodsDetail = (params)=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/goodsinfo',
+        params,
+    })
+} 
+
+// 商品修改
+export const updateGoods = (data)=>{
+    let form = new FormData();
+    for(let i in data){
+        form.append(i,data[i]);
+    }
+    return axios({
+        method:'post',
+        url:baseUrl+'/api/goodsedit',
+        data:form,
+    })
+}
+
+//商品删除
+export const delGoods = (data)=>{
+    return axios({
+        method:'post',
+        url:baseUrl+'/api/goodsdelete',
+        data:qs.stringify(data),
+    })
+} 

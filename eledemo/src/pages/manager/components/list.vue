@@ -60,11 +60,13 @@ export default {
         this.requestManageList({'size':this.pageInfo.pageSize,'page':1});
         // 非父子之间通信，通过eventBus把事件传递给add组件
         this.event.$emit('pageInfo',this.pageInfo);
+        this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'管理员列表'}]);
     },
     methods:{
         ...mapActions({
             'requestManageList':'manage/manageListActions',
             'requestManageCount':'manage/manageCountActions',
+            'requestBreadList':'breadListActions',
         }),
         updateSpecList(page){
             this.pageInfo.page = page;

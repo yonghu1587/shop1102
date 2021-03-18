@@ -50,26 +50,26 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="商品规格" :label-width="formLabelWidth">
-        <el-select v-model="form.specsid">
+        <el-select v-model="form.specsid" @change="changeSpec">
           <el-option label="--请选择--" value="" disabled></el-option>
-          <!-- <el-option
+          <el-option
             v-for="item in specList"
             :key="item.id"
-            :label="item.catename"
+            :label="item.specsname"
             :value="item.id"
-          ></el-option> -->
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="商品属性" :label-width="formLabelWidth">
-        <el-select v-model="form.specsattr">
+        <el-select v-model="form.specsattr" multiple >
           <el-option label="--请选择--" value="" disabled></el-option>
-          <el-option label="顶级分类" :value="0"></el-option>
-          <!-- <el-option
-            v-for="item in cateList"
-            :key="item.id"
-            :label="item.catename"
-            :value="item.id"
-          ></el-option> -->
+          <!-- <el-option label="顶级分类" :value="0"></el-option> -->
+          <el-option
+            v-for="item in specsAttrList"
+            :key="item"
+            :label="item"
+            :value="item"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="状态" :label-width="formLabelWidth">
@@ -83,7 +83,7 @@
         </el-switch>
       </el-form-item>
       <el-form-item label="描述" :label-width="formLabelWidth">
-          <el-input v-model="form.description"></el-input>
+        <div id="div1" style="z-index: 0;"></div>
       </el-form-item>
       <el-form-item :label-width="formLabelWidth">
         <el-button type="primary" @click="confirm" v-if="info.isAdd">确 定</el-button>
@@ -94,15 +94,17 @@
 </template>
 
 <script>
+import E from 'wangeditor'
 import { mapActions, mapGetters } from "vuex";
 import { successAlert, warningAlert } from "../../utils/alert";
+import { addGoods, getGoodsDetail, updateGoods} from "../../utils/request";
 export default {
   props: ["info"],
   data() {
     return {
       form: {
-        first_cateid: '',//二级分类编号
-        second_cateid:'',//一级分类编号
+        first_cateid: '',//一级分类编号
+        second_cateid:'',//二级分类编号
         goodsname: "",//商品名称
         price:'',//价格
         market_price:'',//市场价格
@@ -114,21 +116,55 @@ export default {
         img: "",//图片
         status: 1,//状态
       },
-      second_catelist:[],
+      second_catelist:[],//根据一级分类获取二级分类list
+      specsAttrList:[],//根据规格编号获取规格属性
+      editor:'',//富文本商品描述
       formLabelWidth: "120px",
       imageUrl: "", //要显示的图片地址
+      pageInfo:{
+        pageSize:2,
+        page:1
+      }
     };
+  },
+  watch:{
+    specCount:function(newValue,oldValue){
+        this.requestSpecList({'size':newValue,'page':1});
+    },
+    info:{
+        handler(newValue,oldValue){
+            if(newValue.isAdd){
+                this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'},{path:'/goods/goodsadd',name:'商品添加'}]);
+            }else{
+                this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'},{path:'/goods/goodsadd',name:'商品修改'}]);
+            }
+        },
+        deep:true,
+    }
   },
   mounted() {
     this.requestCateList();
     this.requestSpecCount();
-    this.requestSpecList({'size':4,'page':1});
+    // 使用富文本插件
+    this.editor = new E('#div1');
+    this.editor.create();
+
+    // 监听changeGoodsDetail事件,当点击商品列表的编辑时触发
+    this.event.$on('changeGoodsDetail',res=>{
+        // 调用getDetail方法获取数据详情
+        this.getDetail(res);
+    });
+    if(this.info.isAdd){
+        this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'},{path:'/goods/goodsadd',name:'商品添加'}]);
+    }else{
+        this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'},{path:'/goods/goodsadd',name:'商品修改'}]);
+    }
   },
   computed: {
     ...mapGetters({
       'cateList': "cate/cateList",
       'specList':'spec/specList',
-      'specCount':'spec/specCount'
+      'specCount':'spec/specCount',
     }),
   },
   methods: {
@@ -136,6 +172,9 @@ export default {
       'requestCateList': "cate/cateListActions",
       'requestSpecList':'spec/specListActions',
       'requestSpecCount':'spec/specCountActions',
+      'requestGoodsCount':'goods/goodsCountActions',
+      'requestGoodsList':'goods/goodsListActions',
+      'requestBreadList':'breadListActions',
     }),
     changeCate(e){
         // 一级分类改变时先清空二级分类
@@ -148,6 +187,21 @@ export default {
             }
         }
         // console.log(this.second_catelist);
+    },
+    changeSpec(e){
+        // 商品规格改变时先清空规格属性
+        this.specsAttrList = [];
+        this.form.specsattr = '';
+        // 根据商品规格显示规格属性
+        // console.log(this.specList);
+        // console.log(e);
+        for(let i of this.specList){
+            if (e == i.id){
+                console.log(i.attrs);
+                this.specsAttrList = i.attrs;
+            }
+        }
+        // console.log(this.specsAttrList);
     },
     changeImg(e) {
       // 1.处理文件大小
@@ -171,14 +225,67 @@ export default {
       this.form.img = e.raw;
     },
     confirm() {
-      
+      // 先设置富文本的内容
+      this.form.description = this.editor.txt.html();
+      addGoods(this.form).then(res=>{
+        successAlert(res.data.msg);
+        this.cancel();
+        // 更新商品数量
+        this.requestGoodsCount();
+      })
     },
-    getDetail(id) {
-      
+    getDetail(info) {
+        // 存储list的分页信息
+      this.pageInfo = info;
+      getGoodsDetail({id:info.id}).then(res=>{
+        // 更新二级目录的list
+        this.changeCate(res.data.list.first_cateid);
+        this.changeSpec(res.data.list.specsid);
+        // 更新form的值
+        this.form = res.data.list;
+        // 添加id属性，提交时要使用
+        this.form.id = info.id;
+        // 由于specsattr是一个字符串，要转为数组
+        this.form.specsattr = this.form.specsattr.split(',');
+        // 图片赋值
+        this.imageUrl = this.$preImg+this.form.img;
+        // 富文本赋值
+        this.editor.txt.html(this.form.description);
+      })
     },
     update() {
-     
+      // 先设置富文本的内容
+      this.form.description = this.editor.txt.html();
+      updateGoods(this.form).then(res=>{
+        successAlert(res.data.msg);
+        // 更新列表页面
+        this.requestGoodsList({"page":this.pageInfo.page,'size':this.pageInfo.pageSize});
+        this.$router.push('/goods');
+      })
     },
+    cancel(){
+        // 清空页面输入
+        this.form = {
+            first_cateid: '',//二级分类编号
+            second_cateid:'',//一级分类编号
+            goodsname: "",//商品名称
+            price:'',//价格
+            market_price:'',//市场价格
+            specsid:'',//商品规格编号
+            specsattr:'',//商品规格属性
+            isnew:1,//是否热卖
+            ishot:1,//是否新品
+            description:'',//商品描述
+            img: "",//图片
+            status: 1,//状态
+        };
+        this.second_catelist=[];//根据一级分类获取二级分类list
+        this.specsAttrList=[];//根据规格编号获取规格属性
+        // 设置富文本内容
+        this.editor.txt.html('');
+        // 清除照片
+        this.imageUrl = '';
+    }
   },
 };
 </script>
@@ -186,6 +293,9 @@ export default {
 <style scoped>
 .el-form{
     margin: 20px auto;
+}
+.el-form-item >>> .el-form-item__content{
+    z-index: 1;
 }
 .avatar-uploader >>> .el-upload {
   border: 1px dashed #d9d9d9;

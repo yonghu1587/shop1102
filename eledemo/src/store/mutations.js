@@ -1,5 +1,6 @@
 export const state = {
     user:sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : null,
+    breadList:[{path:'/',name:'首页'}],
 }   
 
 export const mutations = {
@@ -12,12 +13,18 @@ export const mutations = {
             sessionStorage.removeItem('user')
         }
     
+    },
+    changeBreadList(state,arr){
+        state.breadList = arr;
     }
 }
 
 
 export const getters = {
     user(state){
-        return state.user
+        return state.user;
+    },
+    breadList(state){
+        return state.breadList;
     }
 }

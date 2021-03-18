@@ -130,6 +130,7 @@ export default {
       getCateDetail({ id }).then((res) => {
         this.form = res.data.list;
         this.form.id = id;
+        // console.log(res.data);
         this.imageUrl = this.$preImg + res.data.list.img;
       });
     },

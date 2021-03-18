@@ -60,7 +60,7 @@ export default {
       // 跳转登录页
       this.$router.push('/login')
     }
-  }
+  },
 };
 </script>
 

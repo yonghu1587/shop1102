@@ -45,10 +45,12 @@ export default {
     },
     mounted(){
         this.requestMenuList({istree:true});
+        this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'菜单列表'}]);
     },
     methods:{
         ...mapActions({
-            'requestMenuList':'menu/menuListActions'
+            'requestMenuList':'menu/menuListActions',
+            'requestBreadList':'breadListActions',
         }),
         edit(id){
             this.$emit('edit',id)

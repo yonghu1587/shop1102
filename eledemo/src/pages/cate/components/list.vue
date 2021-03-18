@@ -48,10 +48,12 @@ export default {
     },
     mounted(){
         this.requestCateList();
+        this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品分类列表'}]);
     },
     methods:{
         ...mapActions({
-            'requestCateList':'cate/cateListActions'
+            'requestCateList':'cate/cateListActions',
+            'requestBreadList':'breadListActions',
         }),
         edit(id){
             this.$emit('edit',id);

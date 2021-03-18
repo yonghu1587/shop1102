@@ -22,8 +22,8 @@ for(let item in comFilters){
 }
 //eventBus 
 Vue.prototype.event = new Vue;//eventBus
-// Vue.prototype.$preImg = 'http://localhost:3000';//定义一个公共的请求端口
-Vue.prototype.$preImg = '';//定义一个公共的请求端口
+Vue.prototype.$preImg = 'http://localhost:3000';//定义一个公共的请求端口
+// Vue.prototype.$preImg = '';//定义一个公共的请求端口
 // 引入store
 import store from './store'
 /* eslint-disable no-new */

@@ -37,7 +37,8 @@ export default {
     },
     methods:{
         ...mapActions({
-            'requestRoleList':'role/roleListActions'
+            'requestRoleList':'role/roleListActions',
+            'requestBreadList':'breadListActions',
         }),
         edit(id){
             this.$emit('edit',id);
@@ -61,6 +62,7 @@ export default {
     },
     mounted(){
         this.requestRoleList();
+        this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'角色列表'}]);
     }
 }
 </script>

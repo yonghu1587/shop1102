@@ -11,7 +11,6 @@ const cate = ()=> import('../pages/cate/cate')
 const spec = ()=> import('../pages/spec/spec')
 const goods = ()=> import('../pages/goods/goods')
 const goodsadd = ()=> import('../pages/goods/add')
-const goodsedit = ()=> import('../pages/goods/add')
 const echarts = ()=> import('../pages/index/echarts')
 
 export default new Router({
@@ -65,11 +64,6 @@ export default new Router({
               path:'goodsadd',
               component:goodsadd,
               name:'商品添加'
-            },
-            {
-              path:'goodsedit',
-              component:goodsedit,
-              name:'商品修改'
             },
           ]
         },

@@ -65,11 +65,13 @@ export default {
         this.requestSpecList({'size':this.pageInfo.pageSize,'page':1});
         // 非父子之间通信，通过eventBus把事件传递给add组件
         this.event.$emit('specPageInfo',this.pageInfo);
+        this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品规格列表'}]);
     },
     methods:{
         ...mapActions({
             'requestSpecList':'spec/specListActions',
             'requestSpecCount':'spec/specCountActions',
+            'requestBreadList':'breadListActions'
         }),
         updateSpecList(page){
             this.pageInfo.page = page;
