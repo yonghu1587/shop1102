@@ -346,3 +346,108 @@ export const delGoods = (data)=>{
         data:qs.stringify(data),
     })
 } 
+
+// 添加轮播图
+export const addBanner = (data)=>{
+    let form = new FormData();
+    for(let i in data){
+        form.append(i,data[i]);
+    }
+    return axios({
+        method:'post',
+        url:baseUrl+'/api/banneradd',
+        data:form,
+    })
+}
+
+// 轮播图列表
+export const getBannerList = (params)=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/bannerlist'
+    })
+}
+
+// 获取轮播图详情
+export const getBannerDetail = (params)=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/bannerinfo',
+        params,
+    })
+}
+
+// 轮播图修改
+export const updateBanner = (data)=>{
+    let form = new FormData();
+    for(let i in data){
+        form.append(i,data[i]);
+    }
+    return axios({
+        method:'post',
+        url:baseUrl+'/api/banneredit',
+        data:form,
+    })
+}
+
+// 轮播图删除
+export const delBanner = (data)=>{
+    return axios({
+        method:'post',
+        url:baseUrl+'/api/bannerdelete',
+        data:qs.stringify(data),
+    })
+}
+
+// 根据一级分类二级分类id获取商品列表
+export const sidGetGoodsList = (params)=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/goodslist',
+        params,
+    })
+}
+
+// 添加活动
+export const addSeckill = (data)=>{
+    return axios({
+        method:'post',
+        url:baseUrl+'/api/seckadd',
+        data:qs.stringify(data),
+    })
+}
+
+// 活动列表
+export const getSeckillList = ()=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/secklist'
+    })
+}
+
+// 获取活动详情
+export const getSeckillDetail = (params)=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/seckinfo',
+        params,
+    })
+}
+
+// 活动修改
+export const updateSeckill = (data)=>{
+    return axios({
+        method:'post',
+        url:baseUrl+'/api/seckedit',
+        data:qs.stringify(data),
+    })
+}
+
+// 活动删除
+export const delSeckill = (data)=>{
+    return axios({
+        method:'post',
+        url:baseUrl+'/api/seckdelete',
+        data:qs.stringify(data),
+    })
+}

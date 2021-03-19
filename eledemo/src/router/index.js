@@ -11,6 +11,11 @@ const cate = ()=> import('../pages/cate/cate')
 const spec = ()=> import('../pages/spec/spec')
 const goods = ()=> import('../pages/goods/goods')
 const goodsadd = ()=> import('../pages/goods/add')
+const member = ()=> import('../pages/member/member')
+const banner = ()=> import('../pages/banner/banner')
+const banneradd = ()=> import('../pages/banner/add')
+const seckill = ()=> import('../pages/seckill/seckill')
+const seckilladd = ()=> import('../pages/seckill/add')
 const echarts = ()=> import('../pages/index/echarts')
 
 export default new Router({
@@ -61,13 +66,45 @@ export default new Router({
           name:'商品列表',
           children:[
             {
-              path:'goodsadd',
-              component:goodsadd,
+              // 路由传参，区别添加和修改，0为添加
+              path:'goodsadd/:id',
+              components: goodsadd,
               name:'商品添加'
             },
           ]
         },
-        
+        {
+          path:'member',
+          component:member,
+          name:'会员列表',
+         
+        },
+        {
+          path:'banner',
+          component:banner,
+          name:'轮播图列表',
+          children:[
+            {
+              // 路由传参，区别添加和修改，0为添加
+              path:'banneradd/:id',
+              components: banneradd,
+              name:'轮播图添加'
+            },
+          ]
+        },
+        {
+          path:'seckill',
+          component:seckill,
+          name:'秒杀活动',
+          children:[
+            {
+              // 路由传参，区别添加和修改，0为添加
+              path:'seckilladd/:id',
+              components: seckilladd,
+              name:'轮播图添加'
+            },
+          ]
+        },
         {
           path:"*",
           redirect:'/home'

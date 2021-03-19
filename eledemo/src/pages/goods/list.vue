@@ -77,8 +77,8 @@ export default {
         }),
         add(){
             this.info.isAdd = true;
-            this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'},{path:'/goods/goodsadd',name:'商品添加'}]);
-            this.$router.push('/goods/goodsadd')
+            this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'},{name:'商品添加'}]);
+            this.$router.push('/goods/goodsadd/0')
         },
         updateGoodsList(page){
             // 更新页码
@@ -86,34 +86,35 @@ export default {
             this.requestGoodsList({'size':this.pageInfo.pageSize,'page':page});
         },
         edit(id){
-            this.pageInfo.id = id;
-            this.event.$emit('changeGoodsDetail',this.pageInfo);
             this.info.isAdd = false;
             
-            this.$router.push('/goods/goodsadd');
+            this.$router.push('/goods/goodsadd/'+id);
         },
         del(id){
-            delGoods({id}).then(res=>{
-                successAlert(res.data.msg);
-                if(this.goodsList.length < 2 && this.pageInfo.page != 1){
-                    this.pageInfo.page--;
-                }
-                this.requestGoodsCount();
-                this.requestGoodsList({'size':this.pageInfo.pageSize,'page':this.pageInfo.page});
-            })
+            this.$confirm('确定删除该商品?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
+            }).then(() => {
+                delGoods({id}).then(res=>{
+                    successAlert(res.data.msg);
+                    if(this.goodsList.length < 2 && this.pageInfo.page != 1){
+                        this.pageInfo.page--;
+                    }
+                    this.requestGoodsCount();
+                    this.requestGoodsList({'size':this.pageInfo.pageSize,'page':this.pageInfo.page});
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
+            
         }
     },
     mounted(){
         this.requestGoodsCount();
-        if(this.$route.path == '/goods'){
-            this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'}]);
-        }else if(this.$route.path == '/goods/goodsadd'){
-            if(this.info.isAdd){
-                this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'},{path:'/goods/goodsadd',name:'商品添加'}]);
-            }else{
-                this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'},{path:'/goods/goodsadd',name:'商品修改'}]);
-            }
-        }
     },
     computed:{
         ...mapGetters({
@@ -126,21 +127,6 @@ export default {
         goodsCount:function(newValue,oldValue){
             this.requestGoodsList({'size':this.pageInfo.pageSize,'page':this.pageInfo.page});
         },
-        //监听路由
-        $route:{
-            deep:true,
-            handler(newValue){
-                if(newValue.path == '/goods'){
-                    this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'}]);
-                }else if(newValue.path == '/goods/goodsadd'){
-                    if(this.info.isAdd){
-                        this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'},{path:'/goods/goodsadd',name:'商品添加'}]);
-                    }else{
-                        this.requestBreadList([{path:'/',name:'首页'},{path:'/goods',name:'商品列表'},{path:'/goods/goodsadd',name:'商品修改'}]);
-                    }
-                }
-            }
-        } 
     }
 }
 </script>

@@ -20,7 +20,6 @@ export default {
         return {
             info:{
                 isAdd:true,
-                isList:true,
             }
         }
     },
