@@ -13,7 +13,7 @@
         :rules="[{ required: true,pattern, message: '请填写正确的手机号码' }]"
       />
       <van-field
-        v-model="user.nikename"
+        v-model="user.nickname"
         label="昵称"
         placeholder="请输入昵称"
         :rules="[{ required: true, message: '请填写昵称' }]"
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       user: {
-        nikename: "",
+        nickname: "",
         password: "",
         phone: "",
       },

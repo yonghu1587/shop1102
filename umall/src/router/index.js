@@ -23,6 +23,11 @@ export default new Router({
       name:"注册",
     },
     {
+      path:'/goodsList/:id',
+      component:goodsList,
+      name:"商品列表",
+    },
+    {
       path:'/',
       component:index,
       name:"首页",
@@ -48,15 +53,10 @@ export default new Router({
           name:"个人中心",
         },
         {
-          path:'*',
+          path:'/',
           redirect:'/home',
         },
       ]
-    },
-    {
-      path:'/goodsList',
-      component:goodsList,
-      name:"商品列表",
     },
     {
       path:'*',

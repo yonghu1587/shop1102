@@ -1,5 +1,10 @@
 <template>
   <div v-cloak class="main">
+    <van-nav-bar
+      title="首页"
+      left-arrow
+      @click-left="$router.back()"
+    />
     <van-swipe :autoplay="3000">
       <van-swipe-item v-for="(item, index) in images" :key="index">
         <img v-lazy="$preImg+item.img" />
@@ -58,7 +63,7 @@
 import { getBanner, getGoods, cartAdd } from "../utils/request";
 import Vue from 'vue';
 import { Lazyload, Toast } from 'vant';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { priceFilter } from "../filter/price";
 Vue.use(Lazyload);
 export default {
@@ -82,6 +87,9 @@ export default {
     this.getGoodsList();
   },
   methods:{
+    ...mapActions({
+      'requestCartList':'cartListActions',
+    }),
     getBannerList(){
       getBanner().then(res=>{
         this.images = res.data.list;
@@ -100,6 +108,7 @@ export default {
       }
       cartAdd(form).then(res=>{
         Toast.success(res.data.msg);
+        this.requestCartList();
       })
     }
   }

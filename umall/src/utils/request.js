@@ -89,3 +89,30 @@ export const cartAdd = (data)=>{
         data:qs.stringify(data)
     })
 }
+
+// 获取分类商品
+export const getCateGoods = (params)=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/getgoods',
+        params,
+    })
+}
+
+// 获取购物车列表
+export const getCartList = (params)=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/cartlist',
+        params,
+    })
+}
+
+// 删除购物车
+export const delCart = (data)=>{
+    return axios({
+        method:'post',
+        url:baseUrl+'/api/cartdelete',
+        data:qs.stringify(data),
+    })
+}

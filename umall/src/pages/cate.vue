@@ -1,5 +1,10 @@
 <template>
   <div>
+    <van-nav-bar
+      title="分类"
+      left-arrow
+      @click-left="$router.back()"
+    />
     <div class="left">
       <van-sidebar v-model="activeKey">
         <van-sidebar-item v-for="item in cateList" :key="item.id" :title="item.catename" @click="getSecondCate(item.id)" />
@@ -43,10 +48,10 @@ export default {
           this.secondCateList = i.children;
         }
       }
-      console.log(this.secondCateList);
+      // console.log(this.secondCateList);
     },
     getGoodsList(id){
-      console.log(id);
+      this.$router.push('/goodsList/'+id);
     }
   }
 }
