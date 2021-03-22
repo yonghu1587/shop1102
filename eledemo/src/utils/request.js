@@ -2,6 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import {errorAlert} from './alert'
 import store from '../store/index'
+import router from '../router/index'
 // 配置基础路径
 const baseUrl = '/api';
 // const baseUrl = ''
@@ -20,6 +21,9 @@ axios.interceptors.request.use(config=>{
 axios.interceptors.response.use(res=>{
     if(res.data.code !== 200){
         errorAlert(res.data.msg);
+        if(res.data.code == 403){
+            router.push('/login');
+        }
         return;
     }
     console.group(res.config.url)
