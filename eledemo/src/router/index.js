@@ -12,6 +12,7 @@ const spec = ()=> import('../pages/spec/spec')
 const goods = ()=> import('../pages/goods/goods')
 const goodsadd = ()=> import('../pages/goods/add')
 const member = ()=> import('../pages/member/member')
+const memberedit = ()=> import('../pages/member/edit')
 const banner = ()=> import('../pages/banner/banner')
 const banneradd = ()=> import('../pages/banner/add')
 const seckill = ()=> import('../pages/seckill/seckill')
@@ -77,7 +78,14 @@ export default new Router({
           path:'member',
           component:member,
           name:'会员列表',
-         
+          children:[
+            {
+              // 路由传参，区别添加和修改，0为添加
+              path:'memberedit/:id',
+              components: memberedit,
+              name:'会员修改'
+            },
+          ]
         },
         {
           path:'banner',

@@ -58,12 +58,12 @@ export default {
     }),
   },
   mounted() {
-    this.requestSeckillrList();
+    this.requestSeckillList();
   },
   methods: {
     ...mapActions({
       requestBreadList: "breadListActions",
-      requestSeckillrList: "seckill/seckillListActions",
+      requestSeckillList: "seckill/seckillListActions",
     }),
     add() {
       this.$router.push("/seckill/seckilladd/0");

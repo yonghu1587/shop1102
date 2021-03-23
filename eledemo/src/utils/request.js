@@ -455,3 +455,29 @@ export const delSeckill = (data)=>{
         data:qs.stringify(data),
     })
 }
+
+// 会员列表
+export const getMemberList = ()=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/memberlist'
+    })
+}
+
+// 获取会员详情（一条）
+export const getMemberDetail = (params)=>{
+    return axios({
+        method:'get',
+        url:baseUrl+'/api/memberinfo',
+        params,
+    })
+}
+
+// 修改会员详情（一条）
+export const updateMember = (data)=>{
+    return axios({
+        method:'post',
+        url:baseUrl+'/api/memberedit',
+        data:qs.stringify(data),
+    })
+}

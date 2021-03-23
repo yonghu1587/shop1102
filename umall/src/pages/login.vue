@@ -49,9 +49,11 @@ export default {
     onSubmit(){
       // console.log(this.user);
       login(this.user).then(res=>{
-        Toast.success('登录成功');
-        this.requestUser(res.data.list)
-        this.$router.push('/');
+        if(res){
+          this.requestUser(res.data.list)
+          this.$router.push('/');
+          Toast.success('登录成功');
+        }
       })
     }
   }

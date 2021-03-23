@@ -19,17 +19,18 @@ axios.interceptors.request.use(config => {
 // 设置响应拦截
 axios.interceptors.response.use(res => {
     console.group('本次响应路径为:' + res.config.url)
-    if (res.data.code !== 200) {
+    if (res.data.code === 200) {
+        console.log(res);
+        console.groupEnd();
+        return res;
+    }else{
         // 提示错误信息
         Toast.fail(res.data.msg);
         if(res.data.code == 403){
             router.push('/login');
         }
-        return;
+        return false;
     }
-    console.log(res);
-    console.groupEnd();
-    return res;
 })
 
 // 会员注册
